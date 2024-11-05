@@ -35,7 +35,7 @@ import AdminRoutes from "./components/AuthRoute/AdminRoutes";
 const App = () => {
   return (
     <BrowserRouter>
-      <Navbar />
+      {/* <Navbar /> */}
       {/* hide navbar if admin */}
       <Routes>
         {/* nested route */}
@@ -47,7 +47,8 @@ const App = () => {
             </AdminRoutes>
           }
         >
-          {/* products */} <Route path="" element={<OrdersList />} />
+          {/* products */}
+          <Route path="" element={<OrdersList />} />
           <Route path="add-product" element={<AddProduct />} />
           <Route path="manage-products" element={<ManageStocks />} />
           <Route path="products/edit/:id" element={<UpdateProduct />} />
@@ -56,7 +57,7 @@ const App = () => {
           <Route path="manage-coupon" element={<ManageCoupons />} />
           <Route path="manage-coupon/edit/:code" element={<UpdateCoupon />} />
           {/* Category */}
-          <Route path="category-to-add" element={<CategoryToAdd />} />{" "}
+          <Route path="category-to-add" element={<CategoryToAdd />} />
           <Route path="add-category" element={<AddCategory />} />
           <Route path="manage-category" element={<ManageCategories />} />
           <Route path="edit-category/:id" element={<UpdateCategory />} />
