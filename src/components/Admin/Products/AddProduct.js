@@ -9,12 +9,22 @@ import SuccessMsg from "../../SuccessMsg/SuccessMsg";
 import { createProductAction } from "../../../redux/slices/products/productSlices";
 import { fetchCategoriesAction } from "../../../redux/slices/categories/categoriesSlice";
 import { fetchBrandsAction } from "../../../redux/slices/categories/brandsSlice";
+import { fetchColorsAction } from "../../../redux/slices/categories/colorsSlice";
 
 //animated components for react-select
 const animatedComponents = makeAnimated();
 
 export default function AddProduct() {
   const dispatch = useDispatch();
+  //files
+  const [files, setFiles] = useState([]);
+  const [filesErrs, setFilesErrs] = useState([]);
+  //file handleChange
+  const fileHandleChange = (event) => {
+    const newFiles = Array.from(event.target.files);
+    setFiles(newFiles);
+  };
+
   //Sizes
   const sizes = ["S", "M", "L", "XL", "XXL"];
   const [sizeOption, setSizeOption] = useState([]);
@@ -46,7 +56,30 @@ export default function AddProduct() {
     brands: { brands },
   } = useSelector((state) => state?.brands);
 
-  let colorOptionsCoverted, handleColorChangeOption, isAdded;
+  //colors
+  const [colorsOption, setColorsOption] = useState([]);
+  useEffect(() => {
+    dispatch(fetchColorsAction());
+  }, [dispatch]);
+
+  const handleColorChange = (colors) => {
+    setColorsOption(colors);
+  };
+
+  //select data from store
+  const {
+    colors: { colors },
+  } = useSelector((state) => state?.colors);
+
+  //converted colors
+  const colorsCoverted = colors?.map((color) => {
+    return {
+      value: color?.name,
+      label: color?.name,
+    };
+  });
+
+  let isAdded;
 
   //---form data---
   const [formData, setFormData] = useState({
@@ -69,7 +102,7 @@ export default function AddProduct() {
   //onSubmit
   const handleOnSubmit = (e) => {
     e.preventDefault();
-    console.log(sizeOption);
+    console.log(files);
     //dispatch
     dispatch(createProductAction(formData));
     //reset form data
@@ -187,14 +220,14 @@ export default function AddProduct() {
                   components={animatedComponents}
                   isMulti
                   name="colors"
-                  options={colorOptionsCoverted}
+                  options={colorsCoverted}
                   className="basic-multi-select"
                   classNamePrefix="select"
                   isClearable={true}
                   isLoading={false}
                   isSearchable={true}
                   closeMenuOnSelect={false}
-                  onChange={(e) => handleColorChangeOption(e)}
+                  onChange={(e) => handleColorChange(e)}
                 />
               </div>
 
@@ -232,7 +265,7 @@ export default function AddProduct() {
                           <input
                             name="images"
                             value={formData.images}
-                            onChange={handleOnChange}
+                            onChange={fileHandleChange}
                             type="file"
                           />
                         </label>
