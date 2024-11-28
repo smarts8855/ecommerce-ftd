@@ -138,7 +138,7 @@ const productSlice = createSlice({
     builder.addCase(resetErrAction.pending, (state, action) => {
       state.error = null;
     });
-    // reset success
+    //reset success
     builder.addCase(resetSuccessAction.pending, (state, action) => {
       state.isAdded = false;
     });
