@@ -18,9 +18,12 @@ export const createCategoryAction = createAsyncThunk(
   "category/create",
   async (payload, { rejectWithValue, getState, dispatch }) => {
     try {
-      const { name } = payload;
+      const { name, image } = payload;
 
-      //make request
+      //formData
+      const formData = FormData();
+      formData.append("name", name);
+      formData.append("image", image);
 
       //Token- Authenticated
       const token = getState()?.users?.userAuth?.userInfo?.token;
