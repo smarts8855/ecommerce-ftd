@@ -1,10 +1,14 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import ErrorComponent from "../../ErrorMsg/ErrorMsg";
 import SuccessMsg from "../../SuccessMsg/SuccessMsg";
 import LoadingComponent from "../../LoadingComp/LoadingComponent";
+import { createCategoryAction } from "../../../redux/slices/categories/categoriesSlice";
 
 export default function CategoryToAdd() {
+  //dispatch
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     name: "",
   });
@@ -12,33 +16,40 @@ export default function CategoryToAdd() {
   const handleOnChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  let { error, isAdded, loading } = {};
+  let { error, isAdded, loading } = useSelector((state) => state?.categories);
   //files
-  const [files, setFiles] = useState([]);
-  const [fileErrs, setFileErrs] = useState([]);
+  const [file, setFile] = useState(null);
+  const [fileErr, setFileErr] = useState(null);
   //file handleChange
   const fileHandleChange = (event) => {
-    const newFiles = Array.from(event.target.files);
+    const newFile = event.target.files[0];
     //validation
-    const newErrs = [];
-    newFiles.forEach((file) => {
-      if (file?.size > 1000000) {
-        newErrs.push(`${file?.name} is too large`);
-      }
-      if (!file?.type?.startsWith("image/")) {
-        newErrs.push(`${file?.name} is not an image`);
-      }
-    });
-    setFiles(newFiles);
-    setFileErrs(newErrs);
+
+    if (newFile?.size > 1000000) {
+      setFileErr.push(`${newFile?.name} is too large`);
+    }
+    if (!newFile?.type?.startsWith("image/")) {
+      setFileErr.push(`${newFile?.name} is not an image`);
+    }
+
+    setFile(newFile);
   };
   //onSubmit
   const handleOnSubmit = (e) => {
+    console.log(file);
     e.preventDefault();
+    //dispatch
+    dispatch(
+      createCategoryAction({
+        name: formData?.name,
+        image: file,
+      })
+    );
   };
   return (
     <>
       {error && <ErrorComponent message={error?.message} />}
+      {fileErr && <ErrorComponent message={fileErr} />}
       {isAdded && <SuccessMsg message="Category added successfully" />}
       <div className="flex min-h-full flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -105,12 +116,7 @@ export default function CategoryToAdd() {
                           className="relative cursor-pointer rounded-md bg-white font-medium text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:text-indigo-500"
                         >
                           <span>Upload file</span>
-                          <input
-                            name="images"
-                            value={formData.images}
-                            onChange={fileHandleChange}
-                            type="file"
-                          />
+                          <input onChange={fileHandleChange} type="file" />
                         </label>
                       </div>
                       <p className="text-xs text-gray-500">
