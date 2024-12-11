@@ -19,11 +19,11 @@ export const createCategoryAction = createAsyncThunk(
   async (payload, { rejectWithValue, getState, dispatch }) => {
     console.log(payload);
     try {
-      const { name, image } = payload;
+      const { name, file } = payload;
       //fromData
       const formData = new FormData();
       formData.append("name", name);
-      formData.append("image", image);
+      formData.append("file", file);
       //Token - Authenticated
       const token = getState()?.users?.userAuth?.userInfo?.token;
       const config = {
@@ -87,12 +87,10 @@ const categorySlice = createSlice({
     builder.addCase(fetchCategoriesAction.fulfilled, (state, action) => {
       state.loading = false;
       state.categories = action.payload;
-      state.isAdded = true;
     });
     builder.addCase(fetchCategoriesAction.rejected, (state, action) => {
       state.loading = false;
       state.categories = null;
-      state.isAdded = false;
       state.error = action.payload;
     });
   },

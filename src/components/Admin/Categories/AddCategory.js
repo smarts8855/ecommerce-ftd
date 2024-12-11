@@ -42,7 +42,7 @@ export default function CategoryToAdd() {
     dispatch(
       createCategoryAction({
         name: formData?.name,
-        image: file,
+        file,
       })
     );
   };
