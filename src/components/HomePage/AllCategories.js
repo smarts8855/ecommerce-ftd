@@ -32,14 +32,14 @@ const AllCategories = () => {
             <div className="min-w-screen-xl absolute flex space-x-8 px-4 sm:px-6 lg:px-8 xl:relative xl:grid m-2  xl:grid-cols-5 xl:gap-x-8 xl:space-x-0 xl:px-0">
               {categories?.map((category) => (
                 <Link
-                  key={category.name}
-                  to={`/products-filters?category=${category.name}`}
-                  className="relative flex h-80 w-56 flex-col mt-4 overflow-hidden rounded-lg p-6 hover:opacity-75 xl:w-auto"
+                  key={category?.name}
+                  to={`/products-filters?category=${category?.name}`}
+                  className="relative flex h-60 w-56  flex-col mt-4 overflow-hidden rounded-lg p-6 hover:opacity-75 xl:w-auto"
                 >
                   <span aria-hidden="true" className="absolute inset-0">
                     <img
-                      src={category.file}
-                      alt={category.name}
+                      src={category?.file}
+                      alt={category?.name}
                       className="h-full w-full object-cover object-center"
                     />
                   </span>
@@ -48,7 +48,7 @@ const AllCategories = () => {
                     className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-gray-800 opacity-50"
                   />
                   <span className="relative mt-auto text-center text-xl font-bold text-white">
-                    {category.name} ({category.products.length})
+                    {category?.name} ({category?.products?.length})
                   </span>
                 </Link>
               ))}
