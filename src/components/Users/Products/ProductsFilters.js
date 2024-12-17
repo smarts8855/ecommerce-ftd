@@ -79,7 +79,10 @@ export default function ProductsFilters() {
   //build up url
   let productUrl = `${baseURL}/products`;
   if (category) {
-    productUrl = `${baseURL}/products?category=${category}`;
+    productUrl = `${baseURL}/products?category=${category}&size=EEEEE`;
+  }
+  if (brand) {
+    productUrl = `${baseURL}/products?category=${category}&brand=${brand}`;
   }
   //fetch all products
   useEffect(() => {
