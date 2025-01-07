@@ -20,7 +20,7 @@ export default function Navbar() {
   }, [dispatch]);
 
   const { categories } = useSelector((state) => state?.categories);
-  const categoriesToDisplay = categories?.categories?.slice(0, 4);
+  const categoriesToDisplay = categories?.categories?.slice(0, 8);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 

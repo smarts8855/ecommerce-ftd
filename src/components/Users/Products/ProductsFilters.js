@@ -20,6 +20,9 @@ import baseURL from "../../../utils/baseURL";
 import { fetchProductsAction } from "../../../redux/slices/products/productSlices";
 import { fetchBrandsAction } from "../../../redux/slices/categories/brandsSlice";
 import { fetchColorsAction } from "../../../redux/slices/categories/colorsSlice";
+import LoadingComponent from "../../LoadingComp/LoadingComponent";
+import ErrorMsg from "../../ErrorMsg/ErrorMsg";
+import NoDataFound from "../../NoDataFound/NoDataFound";
 
 const sortOptions = [
   { name: "Most Popular", href: "#", current: true },
@@ -75,14 +78,24 @@ export default function ProductsFilters() {
   const [price, setPrice] = useState("");
   const [brand, setBrand] = useState("");
   const [size, setSize] = useState("");
+  console.log(price);
 
   //build up url
   let productUrl = `${baseURL}/products`;
   if (category) {
-    productUrl = `${baseURL}/products?category=${category}&size=EEEEE`;
+    productUrl = `${baseURL}/products?category=${category}`;
   }
   if (brand) {
-    productUrl = `${baseURL}/products?category=${category}&brand=${brand}`;
+    productUrl = `${productUrl}&brand=${brand}`;
+  }
+  if (size) {
+    productUrl = `${productUrl}&size=${size}`;
+  }
+  if (price) {
+    productUrl = `${productUrl}&price=${price}`;
+  }
+  if (color) {
+    productUrl = `${productUrl}&color=${color?.name}`;
   }
   //fetch all products
   useEffect(() => {
@@ -91,11 +104,13 @@ export default function ProductsFilters() {
         url: productUrl,
       })
     );
-  }, [dispatch]);
+  }, [dispatch, category, size, brand, price, color]);
 
   //get store data
   const {
     products: { products },
+    loading,
+    error,
   } = useSelector((state) => state?.products);
 
   //fetch brands
@@ -435,16 +450,16 @@ export default function ProductsFilters() {
                           </h3>
                           <Disclosure.Panel className="pt-6">
                             <div className="space-y-6">
-                              {sizeCategories.map((option) => (
-                                <div key={option} className="flex items-center">
+                              {sizeCategories.map((size) => (
+                                <div key={size} className="flex items-center">
                                   <input
                                     type="radio"
                                     name="size"
-                                    onClick={() => setSize(option)}
+                                    onClick={() => setSize(size)}
                                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                   />
                                   <label className="ml-3 min-w-0 flex-1 text-gray-500">
-                                    {option}
+                                    {size}
                                   </label>
                                 </div>
                               ))}
@@ -547,7 +562,7 @@ export default function ProductsFilters() {
                       <h3 className="-mx-2 -my-3 flow-root">
                         <Disclosure.Button className="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500">
                           <span className="font-medium text-gray-900">
-                            Colors Categories
+                            Colors
                           </span>
                           <span className="ml-6 flex items-center">
                             {open ? (
@@ -758,10 +773,12 @@ export default function ProductsFilters() {
               </form>
 
               {/* Product grid */}
-              {productsLoading ? (
-                <h2 className="text-xl">Loading...</h2>
-              ) : productsError ? (
-                <h2 className="text-red-500">{productsError}</h2>
+              {loading ? (
+                <LoadingComponent />
+              ) : error ? (
+                <ErrorMsg message={error?.message} />
+              ) : products?.length <= 0 ? (
+                <NoDataFound />
               ) : (
                 <Products products={products} />
               )}
