@@ -20,8 +20,6 @@ export const createBrandAction = createAsyncThunk(
     try {
       const { name } = payload;
 
-     
-
       //Token- Authenticated
       const token = getState()?.users?.userAuth?.userInfo?.token;
       const config = {
