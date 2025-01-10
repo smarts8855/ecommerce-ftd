@@ -90,6 +90,10 @@ export default function Product() {
   const dispatch = useDispatch();
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
+  console.log({
+    selectedColor,
+    selectedSize,
+  });
 
   let productDetails = {};
   let productColor;
@@ -118,6 +122,8 @@ export default function Product() {
         qty: product?.qty,
         price: product?.price,
         description: product?.description,
+        color: selectedColor,
+        size: selectedSize,
       })
     );
   };
