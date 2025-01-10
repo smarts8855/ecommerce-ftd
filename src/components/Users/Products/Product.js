@@ -8,6 +8,7 @@ import { StarIcon } from "@heroicons/react/20/solid";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductAction } from "../../../redux/slices/products/productSlices";
+import { addOrderToCartAction } from "../../../redux/slices/cart/cartSlices";
 const product = {
   name: "Basic Tee",
   price: "$35",
@@ -90,8 +91,6 @@ export default function Product() {
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
 
-  //Add to cart handler
-  const addToCartHandler = (item) => {};
   let productDetails = {};
   let productColor;
   let productSize;
@@ -109,6 +108,19 @@ export default function Product() {
     error,
     product: { product },
   } = useSelector((state) => state?.products);
+
+  //Add to cart handler
+  const addToCartHandler = () => {
+    dispatch(
+      addOrderToCartAction({
+        _id: product?._id,
+        name: product?.name,
+        qty: product?.qty,
+        price: product?.price,
+        description: product?.description,
+      })
+    );
+  };
 
   return (
     <div className="bg-white">
