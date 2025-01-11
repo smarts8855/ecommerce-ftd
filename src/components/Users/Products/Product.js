@@ -90,10 +90,6 @@ export default function Product() {
   const dispatch = useDispatch();
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedColor, setSelectedColor] = useState("");
-  console.log({
-    selectedColor,
-    selectedSize,
-  });
 
   let productDetails = {};
   let productColor;
