@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { RadioGroup } from "@headlessui/react";
+import Swal from "sweetalert2";
 import {
   CurrencyDollarIcon,
   GlobeAmericasIcon,
@@ -111,6 +112,22 @@ export default function Product() {
 
   //Add to cart handler
   const addToCartHandler = () => {
+    //check if color or size selected
+    if (selectedColor === "") {
+      return Swal.fire({
+        icon: "error",
+        title: "Oops...!",
+        text: "Please select color",
+      });
+    }
+
+    if (selectedSize === "") {
+      return Swal.fire({
+        icon: "error",
+        title: "Oops....!",
+        text: "Please select  size",
+      });
+    }
     dispatch(
       addOrderToCartAction({
         _id: product?._id,
@@ -122,6 +139,11 @@ export default function Product() {
         size: selectedSize,
       })
     );
+    return Swal.fire({
+      icon: "success",
+      title: "Good Job",
+      text: "Product added to cart successfully",
+    });
   };
 
   return (
