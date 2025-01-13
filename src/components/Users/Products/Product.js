@@ -9,7 +9,10 @@ import { StarIcon } from "@heroicons/react/20/solid";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductAction } from "../../../redux/slices/products/productSlices";
-import { addOrderToCartAction } from "../../../redux/slices/cart/cartSlices";
+import {
+  addOrderToCartAction,
+  getCartItemFromLocalStorageAction,
+} from "../../../redux/slices/cart/cartSlices";
 const product = {
   name: "Basic Tee",
   price: "$35",
@@ -93,9 +96,6 @@ export default function Product() {
   const [selectedColor, setSelectedColor] = useState("");
 
   let productDetails = {};
-  let productColor;
-  let productSize;
-  let cartItems = [];
 
   //get id from params
   const { id } = useParams();
@@ -110,8 +110,27 @@ export default function Product() {
     product: { product },
   } = useSelector((state) => state?.products);
 
+  //get cart items
+  useEffect(() => {
+    dispatch(getCartItemFromLocalStorageAction());
+  }, []);
+
+  //get data from store
+  const { cartItems } = useSelector((state) => state?.carts);
+  const productExists = cartItems?.find(
+    (item) => item?._id?.toString() === product?._id?.toString()
+  );
+
   //Add to cart handler
   const addToCartHandler = () => {
+    //check if product is in cart
+    if (productExists) {
+      return Swal.fire({
+        icon: "error",
+        title: "Oops...!",
+        text: "Product is already in cart",
+      });
+    }
     //check if color or size selected
     if (selectedColor === "") {
       return Swal.fire({
