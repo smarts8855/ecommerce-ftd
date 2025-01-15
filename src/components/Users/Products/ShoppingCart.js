@@ -172,9 +172,7 @@ export default function ShoppingCart() {
                 <dt className="text-base font-medium text-gray-900">
                   Order total
                 </dt>
-                <dd className=" text-xl font-medium text-gray-900">
-                  $ {calculateTotalDiscountedPrice().toFixed(2)}
-                </dd>
+                <dd className=" text-xl font-medium text-gray-900">$ 999</dd>
               </div>
             </dl>
 
