@@ -37,14 +37,23 @@ export const getCartItemFromLocalStorageAction = createAsyncThunk(
 
 //change order item qty
 export const changeOrderItemQty = createAsyncThunk(
-  "cart/get-order-item",
-  async () => {
+  "cart/change-item-qty",
+  async ({ productId, qty }) => {
+    console.log(productId, qty);
     const cartItems = localStorage.getItem("cartItems")
       ? JSON.parse(localStorage.getItem("cartItems"))
       : [];
-    //get from storage
+    const newCartItems = cartItems?.map((item) => {
+      if (item?._id?.toString() === productId?.toString()) {
+        //get new price
+        const newPrice = item?.price * qty;
+        item.qty = +qty;
+        item.totalPrice = newPrice;
+      }
+      return item;
+    });
 
-    return cartItems;
+    localStorage.setItem("cartItems", JSON.stringify(newCartItems));
   }
 );
 
