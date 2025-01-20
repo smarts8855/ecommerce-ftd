@@ -159,11 +159,12 @@ export default function Product() {
         image: product?.images[0],
       })
     );
-    return Swal.fire({
+    Swal.fire({
       icon: "success",
       title: "Good Job",
       text: "Product added to cart successfully",
     });
+    return dispatch(getCartItemFromLocalStorageAction());
   };
 
   return (

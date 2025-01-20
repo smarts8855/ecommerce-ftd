@@ -10,10 +10,10 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   changeOrderItemQty,
   getCartItemFromLocalStorageAction,
+  removeOrderItemQty,
 } from "../../../redux/slices/cart/cartSlices";
 
 export default function ShoppingCart() {
-  let changeOrderItemQtyHandler;
   let removeOrderItemFromLocalStorageHandler;
   let calculateTotalDiscountedPrice;
   let error;
@@ -28,6 +28,17 @@ export default function ShoppingCart() {
   }, [dispatch]);
   //get cart items from store
   const { cartItems } = useSelector((state) => state?.carts);
+  //add to cart handler
+  const changeOrderItemQtyHandler = (productId, qty) => {
+    dispatch(changeOrderItemQty({ productId, qty }));
+    dispatch(getCartItemFromLocalStorageAction());
+  };
+
+  //remove cart item handler
+  const removeOrderItemQtyHandler = (productId) => {
+    dispatch(removeOrderItemQty(productId));
+    dispatch(getCartItemFromLocalStorageAction());
+  };
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-2xl px-4 pt-16 pb-24 sm:px-6 lg:max-w-7xl lg:px-8">
@@ -72,8 +83,10 @@ export default function ShoppingCart() {
                           </p>
                         </div>
                         <p className="mt-1 text-sm font-medium text-gray-900">
-                          {/* $ {product.discountedPrice} X {product.qty} */}
-                          {product.price}
+                          ${product?.price} x {product?.qty} = $
+                          {product?.totalPrice > product?.price
+                            ? product?.totalPrice
+                            : product?.price}
                         </p>
                       </div>
 
@@ -82,18 +95,10 @@ export default function ShoppingCart() {
                           Quantity, {product.name}
                         </label>
                         <select
-                          // onChange={(e) =>
-                          //   changeOrderItemQtyHandler(
-                          //     product?.productID,
-                          //     e.target.value
-                          //   )
-                          // }
                           onChange={(e) =>
-                            dispatch(
-                              changeOrderItemQty({
-                                productId: product?._id,
-                                qty: e.target.value,
-                              })
+                            changeOrderItemQtyHandler(
+                              product?._id,
+                              e.target.value
                             )
                           }
                           className="max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
@@ -109,9 +114,7 @@ export default function ShoppingCart() {
                         <div className="absolute top-0 right-0">
                           <button
                             onClick={() =>
-                              removeOrderItemFromLocalStorageHandler(
-                                product?._id
-                              )
+                              removeOrderItemQtyHandler(product?._id)
                             }
                             className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500"
                           >
