@@ -34,6 +34,12 @@ export default function ShoppingCart() {
     dispatch(getCartItemFromLocalStorageAction());
   };
 
+  //calculate total price
+  const sumTotalPrice = cartItems?.reduce((acc, current) => {
+    return acc + current?.totalPrice;
+  }, 0);
+  console.log(sumTotalPrice);
+
   //remove cart item handler
   const removeOrderItemQtyHandler = (productId) => {
     dispatch(removeOrderItemQty(productId));
@@ -84,9 +90,7 @@ export default function ShoppingCart() {
                         </div>
                         <p className="mt-1 text-sm font-medium text-gray-900">
                           ${product?.price} x {product?.qty} = $
-                          {product?.totalPrice > product?.price
-                            ? product?.totalPrice
-                            : product?.price}
+                          {product?.totalPrice}
                         </p>
                       </div>
 
@@ -105,10 +109,13 @@ export default function ShoppingCart() {
                         >
                           {/* use the qty  */}
 
-                          <option value={1}>1</option>
-                          <option value={2}>2</option>
-                          <option value={3}>3</option>
-                          <option value={4}>4</option>
+                          {[...Array(product?.qtyLeft).keys()].map((x) => {
+                            return (
+                              <option key={x} value={x + 1}>
+                                {x + 1}
+                              </option>
+                            );
+                          })}
                         </select>
                         {/* remove */}
                         <div className="absolute top-0 right-0">
@@ -145,7 +152,9 @@ export default function ShoppingCart() {
             <dl className="mt-6 space-y-4">
               <div className="flex items-center justify-between">
                 <dt className="text-sm text-gray-600">Subtotal</dt>
-                <dd className="text-sm font-medium text-gray-900">$ 3000</dd>
+                <dd className="text-sm font-medium text-gray-900">
+                  $ {sumTotalPrice}.00
+                </dd>
               </div>
               <div className="flex items-center justify-between border-t border-gray-200 pt-4"></div>
               {/* add coupon */}

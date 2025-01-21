@@ -151,12 +151,14 @@ export default function Product() {
       addOrderToCartAction({
         _id: product?._id,
         name: product?.name,
-        qty: product?.qty,
+        qty: 1,
         price: product?.price,
         description: product?.description,
         color: selectedColor,
         size: selectedSize,
         image: product?.images[0],
+        totalPrice: product?.price,
+        qtyLeft: product?.qtyLeft,
       })
     );
     Swal.fire({
