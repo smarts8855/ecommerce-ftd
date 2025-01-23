@@ -57,7 +57,25 @@ export const fetchCouponsAction = createAsyncThunk(
       // const { name } = payload;
 
       //Images
-      const { data } = await axios.get(`${baseURL}/brands`);
+      const { data } = await axios.get(`${baseURL}/coupons`);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+//fetch coupon action
+export const fetchCouponAction = createAsyncThunk(
+  "coupon/fetch Single",
+  async (code, { rejectWithValue, getState, dispatch }) => {
+    try {
+      // const { name } = payload;
+
+      //Images
+      const { data } = await axios.get(
+        `${baseURL}/coupons/single?code=${code}`,
+        { code }
+      );
       return data;
     } catch (error) {
       return rejectWithValue(error?.response?.data);
@@ -98,6 +116,22 @@ const couponsSlice = createSlice({
     builder.addCase(fetchCouponsAction.rejected, (state, action) => {
       state.loading = false;
       state.coupons = null;
+      state.isAdded = false;
+      state.error = action.payload;
+    });
+
+    //fetch single coupon
+    builder.addCase(fetchCouponAction.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(fetchCouponAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.coupon = action.payload;
+      state.isAdded = true;
+    });
+    builder.addCase(fetchCouponAction.rejected, (state, action) => {
+      state.loading = false;
+      state.coupon = null;
       state.isAdded = false;
       state.error = action.payload;
     });
