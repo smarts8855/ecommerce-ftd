@@ -32,6 +32,7 @@ export default function ShoppingCart() {
   const applyCouponSubmit = (e) => {
     e.preventDefault();
     dispatch(fetchCouponAction(couponCode));
+    setCouponCode("");
   };
 
   //get coupon from store
@@ -192,7 +193,7 @@ export default function ShoppingCart() {
               <form onSubmit={applyCouponSubmit}>
                 <div className="mt-1">
                   <input
-                    value={coupon?.coupon?.discount}
+                    value={couponCode}
                     onChange={(e) => setCouponCode(e.target.value)}
                     type="text"
                     className="block w-full rounded-md border p-2 border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
@@ -212,7 +213,9 @@ export default function ShoppingCart() {
                 <dt className="text-base font-medium text-gray-900">
                   Order total
                 </dt>
-                <dd className=" text-xl font-medium text-gray-900">$ 999</dd>
+                <dd className=" text-xl font-medium text-gray-900">
+                  $ {sumTotalPrice}
+                </dd>
               </div>
             </dl>
 
