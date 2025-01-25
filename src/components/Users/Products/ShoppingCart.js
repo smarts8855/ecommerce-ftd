@@ -16,13 +16,10 @@ import { fetchCouponAction } from "../../../redux/slices/coupons/couponsSlice";
 import LoadingComponent from "../../LoadingComp/LoadingComponent";
 import ErrorMsg from "../../ErrorMsg/ErrorMsg";
 import SuccessMsg from "../../SuccessMsg/SuccessMsg";
+import { data } from "autoprefixer";
 
 export default function ShoppingCart() {
-  let removeOrderItemFromLocalStorageHandler;
-  let calculateTotalDiscountedPrice;
-
-  let couponFound;
-
+  //dispatch
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getCartItemFromLocalStorageAction());
@@ -222,9 +219,8 @@ export default function ShoppingCart() {
             <div className="mt-6">
               <Link
                 //  pass data to checkout page
-                to={{
-                  pathname: "/order-payment",
-                }}
+                to="/order-payment"
+                state={{ sumTotalPrice }}
                 className="w-full rounded-md border border-transparent bg-indigo-600 py-3 px-4 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
               >
                 Proceed to Checkout
