@@ -8,7 +8,7 @@ import {
 
 //initialState
 const initialState = {
-  oders: [],
+  orders: [],
   order: null,
   loading: false,
   error: null,
@@ -30,7 +30,6 @@ export const placeOrderAction = createAsyncThunk(
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
         },
       };
 
@@ -43,17 +42,16 @@ export const placeOrderAction = createAsyncThunk(
         },
         config
       );
-      return data;
+      return window.open(data?.url);
     } catch (error) {
       return rejectWithValue(error?.response?.data);
     }
   }
 );
-//fetch products action
-export const fetchProductsAction = createAsyncThunk(
-  "product/list",
-  async ({ url }, { rejectWithValue, getState, dispatch }) => {
-    console.log({ url });
+//fetch orders action
+export const fetchOrdersAction = createAsyncThunk(
+  "orders/list",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
     try {
       //make request
 
@@ -65,16 +63,16 @@ export const fetchProductsAction = createAsyncThunk(
         },
       };
 
-      const { data } = await axios.get(`${url}`, config);
+      const { data } = await axios.get(`${baseURL}/orders`, config);
       return data;
     } catch (error) {
       return rejectWithValue(error?.response?.data);
     }
   }
 );
-//fetch product action
-export const fetchProductAction = createAsyncThunk(
-  "product/details",
+//fetch order action
+export const fetchOrderAction = createAsyncThunk(
+  "order/details",
   async (productId, { rejectWithValue, getState, dispatch }) => {
     try {
       //make request
@@ -88,7 +86,7 @@ export const fetchProductAction = createAsyncThunk(
       };
 
       const { data } = await axios.get(
-        `${baseURL}/products/${productId}`,
+        `${baseURL}/orders/${productId}`,
         config
       );
       return data;
@@ -99,53 +97,51 @@ export const fetchProductAction = createAsyncThunk(
 );
 
 //slice
-const productSlice = createSlice({
-  name: "products",
+const ordersSlice = createSlice({
+  name: "orders",
   initialState,
   extraReducers: (builder) => {
     //create
-    builder.addCase(createProductAction.pending, (state) => {
+    builder.addCase(placeOrderAction.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(createProductAction.fulfilled, (state, action) => {
+    builder.addCase(placeOrderAction.fulfilled, (state, action) => {
       state.loading = false;
-      state.product = action.payload;
+      state.order = action.payload;
       state.isAdded = true;
     });
-    builder.addCase(createProductAction.rejected, (state, action) => {
+    builder.addCase(placeOrderAction.rejected, (state, action) => {
       state.loading = false;
-      state.product = null;
+      state.order = null;
       state.isAdded = false;
       state.error = action.payload;
     });
     //fetch all
-    builder.addCase(fetchProductsAction.pending, (state) => {
+    builder.addCase(fetchOrdersAction.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(fetchProductsAction.fulfilled, (state, action) => {
+    builder.addCase(fetchOrdersAction.fulfilled, (state, action) => {
       state.loading = false;
-      state.products = action.payload;
-      state.isAdded = true;
+      state.orders = action.payload;
     });
-    builder.addCase(fetchProductsAction.rejected, (state, action) => {
+    builder.addCase(fetchOrdersAction.rejected, (state, action) => {
       state.loading = false;
-      state.products = null;
-      state.isAdded = false;
+      state.orders = null;
+
       state.error = action.payload;
     });
     //fetch single
-    builder.addCase(fetchProductAction.pending, (state) => {
+    builder.addCase(fetchOrderAction.pending, (state) => {
       state.loading = true;
     });
-    builder.addCase(fetchProductAction.fulfilled, (state, action) => {
+    builder.addCase(fetchOrderAction.fulfilled, (state, action) => {
       state.loading = false;
-      state.product = action.payload;
-      state.isAdded = true;
+      state.order = action.payload;
     });
-    builder.addCase(fetchProductAction.rejected, (state, action) => {
+    builder.addCase(fetchOrderAction.rejected, (state, action) => {
       state.loading = false;
-      state.product = null;
-      state.isAdded = false;
+      state.order = null;
+
       state.error = action.payload;
     });
     // reset error
@@ -160,6 +156,6 @@ const productSlice = createSlice({
 });
 
 //generate the reducer
-const productReducer = productSlice.reducer;
+const ordersReducer = ordersSlice.reducer;
 
-export default productReducer;
+export default ordersReducer;
