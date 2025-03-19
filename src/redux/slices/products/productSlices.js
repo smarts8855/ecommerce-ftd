@@ -125,6 +125,54 @@ export const fetchProductAction = createAsyncThunk(
   }
 );
 
+//create product action
+export const updateProductAction = createAsyncThunk(
+  "product/update",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    try {
+      const {
+        name,
+        description,
+        category,
+        sizes,
+        brand,
+        colors,
+        price,
+        totalQty,
+        id,
+      } = payload;
+
+      //make request
+
+      //Token- Authenticated
+      const token = getState()?.users?.userAuth?.userInfo?.token;
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await axios.put(
+        `${baseURL}/products/${id}`,
+        {
+          name,
+          description,
+          category,
+          sizes,
+          brand,
+          colors,
+          price,
+          totalQty,
+        },
+        config
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 //slice
 const productSlice = createSlice({
   name: "products",
@@ -145,6 +193,22 @@ const productSlice = createSlice({
       state.isAdded = false;
       state.error = action.payload;
     });
+    //update
+    builder.addCase(updateProductAction.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(updateProductAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.product = action.payload;
+      state.isUpdated = true;
+    });
+    builder.addCase(updateProductAction.rejected, (state, action) => {
+      state.loading = false;
+      state.product = null;
+      state.isUpdated = false;
+      state.error = action.payload;
+    });
+
     //fetch all
     builder.addCase(fetchProductsAction.pending, (state) => {
       state.loading = true;
