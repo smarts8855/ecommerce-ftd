@@ -14,6 +14,7 @@ const initialState = {
   error: null,
   isAdded: false,
   isUpdated: false,
+  stats: null,
 };
 
 //create product action
@@ -70,6 +71,30 @@ export const fetchOrdersAction = createAsyncThunk(
     }
   }
 );
+
+//get orders stats action
+export const getOrdersStatsAction = createAsyncThunk(
+  "orders/statistics",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    try {
+      //make request
+
+      //Token- Authenticated
+      const token = getState()?.users?.userAuth?.userInfo?.token;
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const { data } = await axios.get(`${baseURL}/orders/sales/stats`, config);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 //fetch order action
 export const fetchOrderAction = createAsyncThunk(
   "order/details",
@@ -127,6 +152,20 @@ const ordersSlice = createSlice({
     builder.addCase(fetchOrdersAction.rejected, (state, action) => {
       state.loading = false;
       state.orders = null;
+
+      state.error = action.payload;
+    });
+    //stats
+    builder.addCase(getOrdersStatsAction.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(getOrdersStatsAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.stats = action.payload;
+    });
+    builder.addCase(getOrdersStatsAction.rejected, (state, action) => {
+      state.loading = false;
+      state.stats = null;
 
       state.error = action.payload;
     });
