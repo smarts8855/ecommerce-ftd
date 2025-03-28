@@ -121,7 +121,7 @@ export default function OrdersList() {
                       {order?.totalPrice}
                     </td>
                     <td className="py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                      {order?.paymentStatus !== "Not paid" ? (
+                      {order?.paymentStatus === "Not paid" ? (
                         <Link
                           style={{ cursor: "not-allowed" }}
                           className="text-gray-300"
