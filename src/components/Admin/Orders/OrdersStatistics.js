@@ -12,7 +12,7 @@ export default function OrdersStats() {
   const { stats, loading, error } = useSelector((state) => state?.orders);
 
   const obj = stats?.orders;
-  console.log(obj);
+
   const statistics = obj ? Object?.values(obj[0]) : [];
 
   return (
