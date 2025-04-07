@@ -49,6 +49,40 @@ export const createCouponAction = createAsyncThunk(
     }
   }
 );
+
+//create coupon action
+export const updateCouponAction = createAsyncThunk(
+  "coupons/update",
+  async (
+    { code, discount, startDate, endDate, id },
+    { rejectWithValue, getState, dispatch }
+  ) => {
+    try {
+      //Token- Authenticated
+      const token = getState()?.users?.userAuth?.userInfo?.token;
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      //Images
+      const { data } = await axios.put(
+        `${baseURL}/coupons/update/${id}`,
+        {
+          code,
+          discount,
+          startDate,
+          endDate,
+        },
+        config
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 //fetch coupon action
 export const fetchCouponsAction = createAsyncThunk(
   "coupons/fetch All",
@@ -101,6 +135,21 @@ const couponsSlice = createSlice({
       state.loading = false;
       state.coupon = null;
       state.isAdded = false;
+      state.error = action.payload;
+    });
+    //update
+    builder.addCase(updateCouponAction.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(updateCouponAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.coupon = action.payload;
+      state.isUpdated = true;
+    });
+    builder.addCase(updateCouponAction.rejected, (state, action) => {
+      state.loading = false;
+      state.coupon = null;
+      state.isUpdated = false;
       state.error = action.payload;
     });
 
