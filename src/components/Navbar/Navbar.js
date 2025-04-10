@@ -5,6 +5,7 @@ import {
   ShoppingCartIcon,
   UserIcon,
   XMarkIcon,
+  ArrowRightOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import baseURL from "../../utils/baseURL";
@@ -12,6 +13,7 @@ import logo from "./logo3.png";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategoriesAction } from "../../redux/slices/categories/categoriesSlice";
 import { getCartItemFromLocalStorageAction } from "../../redux/slices/cart/cartSlices";
+import { logoutAction } from "../../redux/slices/users/usersSlice";
 
 export default function Navbar() {
   //dispatch
@@ -36,6 +38,11 @@ export default function Navbar() {
 
   const user = JSON.parse(localStorage.getItem("userInfo"));
   const isLoggedIn = user?.token ? true : false;
+  //logout handler
+
+  const logoutHandler = () => {
+    dispatch(logoutAction());
+  };
 
   return (
     <div className="bg-white">
@@ -279,7 +286,7 @@ export default function Navbar() {
                   <div className="flex flex-1 items-center justify-end">
                     <div className="flex items-center lg:ml-8">
                       <div className="flex space-x-8">
-                        {!isLoggedIn && (
+                        {isLoggedIn && (
                           <div className="flex">
                             <Link
                               to="/customer-profile"
@@ -290,21 +297,9 @@ export default function Navbar() {
                                 aria-hidden="true"
                               />
                             </Link>
-                            <button>
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth={1.5}
-                                stroke="currentColor"
-                                className="size-6"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75"
-                                />
-                              </svg>
+                            {/* logout */}
+                            <button onClick={logoutHandler}>
+                              <ArrowRightOnRectangleIcon className="h-6 w-6 text-gray-500" />
                             </button>
                           </div>
                         )}

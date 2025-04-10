@@ -38,6 +38,7 @@ import BrandsList from "./components/Admin/Categories/BrandsList";
 import ColorsList from "./components/Admin/Categories/ColorsList";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserProfileAction } from "./redux/slices/users/usersSlice";
+import AuthRoute from "./components/AuthRoute/AuthRoute";
 
 const App = () => {
   //dispatch
@@ -106,7 +107,14 @@ const App = () => {
         {/* users */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<RegisterForm />} />
-        <Route path="/customer-profile" element={<CustomerProfile />} />
+        <Route
+          path="/customer-profile"
+          element={
+            <AuthRoute>
+              <CustomerProfile />
+            </AuthRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

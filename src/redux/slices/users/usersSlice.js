@@ -114,6 +114,15 @@ export const getUserProfileAction = createAsyncThunk(
     }
   }
 );
+// logout action
+export const logoutAction = createAsyncThunk(
+  "users/logout",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    localStorage.removeItem("userInfo");
+
+    return true;
+  }
+);
 
 //login action
 export const loginUserAction = createAsyncThunk(
@@ -153,6 +162,11 @@ const usersSlice = createSlice({
     builder.addCase(registerUserAction.rejected, (state, action) => {
       state.error = action.payload;
       state.loading = false;
+    });
+
+    //logout
+    builder.addCase(logoutAction.fulfilled, (state, action) => {
+      state.userAuth.userInfo = null;
     });
 
     //profile
