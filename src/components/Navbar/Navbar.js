@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchCategoriesAction } from "../../redux/slices/categories/categoriesSlice";
 import { getCartItemFromLocalStorageAction } from "../../redux/slices/cart/cartSlices";
 import { logoutAction } from "../../redux/slices/users/usersSlice";
+import { fetchCouponsAction } from "../../redux/slices/coupons/couponsSlice";
 
 export default function Navbar() {
   //dispatch
@@ -42,8 +43,17 @@ export default function Navbar() {
 
   const logoutHandler = () => {
     dispatch(logoutAction());
+    window.location.href = "/";
   };
 
+  //coupons
+  useEffect(() => {
+    dispatch(fetchCouponsAction());
+  }, [dispatch]);
+  //get coupons
+  const { coupons, loading, error } = useSelector((state) => state?.coupons);
+  //Get current coupon
+  const currentCoupon = coupons?.coupons?.[coupons?.coupons?.length - 1];
   return (
     <div className="bg-white">
       {/* Mobile menu */}
@@ -170,34 +180,51 @@ export default function Navbar() {
 
       <header className="relative z-10">
         <nav aria-label="Top">
-          {/* Top navigation  desktop*/}
-          <div className="bg-gray-900">
-            <div className="mx-auto flex h-10 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-              <p className="flex-1 text-center text-sm font-medium text-white lg:flex-none">
-                Get free delivery on orders over $100
-              </p>
+          {!currentCoupon?.isExpired && (
+            <div className="bg-yellow-500">
+              <div className="mx-auto flex h-10 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+                <p
+                  style={{ textAlign: "center", width: "100%" }}
+                  className="flex-1 text-center text-sm font-medium text-white lg:flex-none"
+                >
+                  {currentCoupon
+                    ? `${currentCoupon?.code}- ${currentCoupon?.discount}%, ${currentCoupon?.daysLeft}`
+                    : "No Flash sale at moment"}
+                </p>
 
-              <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                {!isLoggedIn && (
-                  <>
-                    <Link
-                      to="/register"
-                      className="text-sm font-medium text-white hover:text-gray-100"
-                    >
-                      Create an account
-                    </Link>
-                    <span className="h-6 w-px bg-gray-600" aria-hidden="true" />
-                    <Link
-                      to="/login"
-                      className="text-sm font-medium text-white hover:text-gray-100"
-                    >
-                      Sign in
-                    </Link>
-                  </>
-                )}
+                <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6"></div>
               </div>
             </div>
-          </div>
+          )}
+          {/* Top navigation  desktop*/}
+          {!isLoggedIn && (
+            <div className="bg-gray-800">
+              <div className="mx-auto flex h-10 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+                <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                  {!isLoggedIn && (
+                    <>
+                      <Link
+                        to="/register"
+                        className="text-sm font-medium text-white hover:text-gray-100"
+                      >
+                        Create an account
+                      </Link>
+                      <span
+                        className="h-6 w-px bg-gray-600"
+                        aria-hidden="true"
+                      />
+                      <Link
+                        to="/login"
+                        className="text-sm font-medium text-white hover:text-gray-100"
+                      >
+                        Sign in
+                      </Link>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Deskto Navigation */}
           <div className="bg-white">
@@ -284,6 +311,11 @@ export default function Navbar() {
 
                   {/* login profile icon mobile */}
                   <div className="flex flex-1 items-center justify-end">
+                    {user?.userFound?.isAdmin && (
+                      <button className="inline-flex items-center rounded-md border border-transparent bg-red-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        Admin Dashboard
+                      </button>
+                    )}
                     <div className="flex items-center lg:ml-8">
                       <div className="flex space-x-8">
                         {isLoggedIn && (

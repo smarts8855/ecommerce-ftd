@@ -22,6 +22,8 @@ const Login = () => {
   const onSubmitHandler = (e) => {
     e.preventDefault();
     dispatch(loginUserAction({ email, password }));
+    //reload
+    window.location.href = "/";
   };
 
   //get data from store

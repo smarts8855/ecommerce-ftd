@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 
 export default function ManageCoupons() {
-  const { id } = useParams();
   //dispatch
   const dispatch = useDispatch();
   useEffect(() => {
