@@ -38,6 +38,7 @@ export default function Navbar() {
   //get login user from localstorage
 
   const user = JSON.parse(localStorage.getItem("userInfo"));
+  console.log(user);
   const isLoggedIn = user?.token ? true : false;
   //logout handler
 
@@ -311,10 +312,13 @@ export default function Navbar() {
 
                   {/* login profile icon mobile */}
                   <div className="flex flex-1 items-center justify-end">
-                    {user?.userFound?.isAdmin && (
-                      <button className="inline-flex items-center rounded-md border border-transparent bg-red-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    {user?.isAdmin && (
+                      <Link
+                        to="/admin"
+                        className="inline-flex items-center rounded-md border border-transparent bg-red-500 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                      >
                         Admin Dashboard
-                      </button>
+                      </Link>
                     )}
                     <div className="flex items-center lg:ml-8">
                       <div className="flex space-x-8">
@@ -322,7 +326,7 @@ export default function Navbar() {
                           <div className="flex">
                             <Link
                               to="/customer-profile"
-                              className="-m-2 p-2 text-gray-400 hover:text-gray-500"
+                              className="-m-2 p-2 mr-2 text-gray-400 hover:text-gray-500"
                             >
                               <UserIcon
                                 className="h-6 w-6"

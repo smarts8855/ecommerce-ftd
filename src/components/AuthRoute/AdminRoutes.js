@@ -12,7 +12,7 @@ const AdminRoutes = ({ children }) => {
   //get user from store
   const { userAuth } = useSelector((state) => state?.users);
 
-  const isAdmin = userAuth?.userInfo?.userFound?.isAdmin ? true : false;
+  const isAdmin = userAuth?.userInfo?.isAdmin ? true : false;
   if (!isAdmin) return <AdminOnly />;
   return <>{children}</>;
 };

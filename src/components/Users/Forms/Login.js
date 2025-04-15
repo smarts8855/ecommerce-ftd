@@ -23,7 +23,7 @@ const Login = () => {
     e.preventDefault();
     dispatch(loginUserAction({ email, password }));
     //reload
-    window.location.href = "/";
+    // window.location.href = "/";
   };
 
   //get data from store
@@ -33,7 +33,7 @@ const Login = () => {
   // redirect
 
   useEffect(() => {
-    if (userInfo?.userFound) {
+    if (userInfo?.token) {
       window.location.href = "/";
     }
   }, [userInfo]);
